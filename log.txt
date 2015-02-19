@@ -1,0 +1,31 @@
+# run main table generator script
+python compareOts.py crispor
+
+# show offtarget count versus gc content in guides
+# join guides.txt guideSeq/orig/otCounts.tab | tabGcContent /dev/stdin 1 | sort -k3n | cut -f1,3,4 > guidesGc.tab
+# mismatch location plot for offtargets with >4 mismatches in guides that are not GC rich:
+# cat crisporMiss.bed | gawk '($11>4)' | grep -v sgRNA4 | grep _site2 -v | cut -f1,4
+
+# number of offtargets with MM > 4
+cat allGuideSeqOts.tab | gawk '($11>4)' | wc -l
+
+# number of offtargets with high GC content and MM > 4
+less allGuideSeqOts.tab | gawk '($3>75 && $11>4)'   | wc -l
+
+# offtargets that are MM>4 and less than 75% GC, with name, mutation location, score and reads 
+less allGuideSeqOts.tab | gawk '($3<75 && $11>4)'   | cut -f1,4,9,13 | sort -n
+
+# offtargets with MM<=4: their PAM sites and scores
+
+plotHist plots/guideSeq.tab plots/crisporNotGuideSeq.tab --out /var/www/crisporMax/downloads/histGseqVsMiss.pdf
+plotHist plots/guideSeq.tab plots/crisporNotGuideSeq.tab --out /var/www/crisporMax/downloads/histGseqVsMissZoom.pdf --max 5
+plotHist plots/guideSeq.tab plots/crisporNotGuideSeq.tab --out /var/www/crisporMax/downloads/histGseqVsMissZoom2.pdf --max 1
+
+# number of lowGc/4MM offtargets with <= a given off-target score, printed is read count for gSeq
+cat gSeqMissed.tab | gawk '($6<75 && $8<=4 && $9<0.3) {print $10}' | wc -l  
+cat crisporMiss.tab | gawk '($6<75 && $8<=4 && $9<0.3) {print $10}' | wc -l  
+plotHist plots/guideSeqWeighted.tab plots/crisporNotGuideSeq.tab --out /var/www/crisporMax/downloads/histGseqVsMissWeightedZoom2.pdf --max 1 --binCount 2000 --maxY 0.20
+
+# number of off-targets with more than 5% of reads
+less allGuideSeqOts.tab | awk '($10>0.05)' | cut -f4 | tabUniq -r | cut -f1,2
+python compareOts.py crisporAltPams > comparison.txt

@@ -1,0 +1,2 @@
+for i in ../crispor/*.fa; do /var/www/crisporMax/crispor.cgi hg19 $i `basename $i .fa`guides.txt -o `basename $i .fa`.tab; done
+for i in *.tab; do cat $i | gawk '{OFS="\t"; print $6,$7,$8,$3,$5,"."}' | grep -v chrom > `basename $i .tab`.bed; done

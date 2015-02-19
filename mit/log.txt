@@ -1,0 +1,1 @@
+for i in orig/*.csv; do cat $i | sed -e 's/, /\t/g' | gawk '{OFS="\t"; if ($3=="1") {strand = "+";} else {strand = "-";}; print $2, $4, $4+23, $5, $7, strand}' | grep -v strand > `basename $i .csv`.bed; done

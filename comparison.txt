@@ -1,0 +1,12 @@
+guideName	guideSeq_otCount	mit_otCount	crispor_count	guideSeq_mit_overlap	guideSeq_crispor_overlap	mit_share	crispor_share
+HEK293_sgRNA4	133	472	834	61	103	45.86	77.44
+VEGFA_site2	151	484	422	55	71	36.42	47.02
+VEGFA_site1	21	398	310	9	16	42.86	76.19
+HEK293_sgRNA3	5	176	108	3	4	60.00	80.00
+HEK293_sgRNA2	2	220	166	1	1	50.00	50.00
+VEGFA_site3	59	447	1829	21	55	35.59	93.22
+EMX1	15	327	287	10	12	66.67	80.00
+FANCF	8	269	241	3	8	37.50	100.00
+HEK293_sgRNA1	9	144	92	7	8	77.78	88.89
+RNF2	1	178	126	1	1	100.00	100.00
+total guide-seq 404, total found MIT: 42.33%, total found CRISPOR: 69.06%

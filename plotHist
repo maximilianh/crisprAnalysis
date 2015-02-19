@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+import random, sys
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot
+from os.path import basename
+
+from optparse import OptionParser
+# === COMMAND LINE INTERFACE, OPTIONS AND HELP ===
+parser = OptionParser("usage: %prog [options] fname(s) - plot histogram")
+
+#parser.add_option("-l", "--wordlength", dest="motiflength", action="store", help="length of word [default: %default, hexamers]", type="int", metavar="NUMBER", default="6") 
+parser.add_option("", "--max", dest="max", action="store", type="float", help="show only up to max on the X axis", default=None)
+parser.add_option("", "--maxY", dest="maxY", action="store", type="float", help="limit of Y axis", default=None)
+parser.add_option("", "--binCount", dest="binCount", action="store", type="int", help="count of bins", default=50)
+parser.add_option("", "--out", dest="out", action="store", help="output filename", default="plot.pdf")
+#parser.add_option("-q", "--quiet", dest="quiet", action="store_true", help="shut up, don't warn all the time") 
+(options, args) = parser.parse_args()
+
+fnames = args
+vals = []
+realMax = -99999999
+for fname in fnames:
+    fnameVals = [float(x) for x in open(fname).read().splitlines()]
+    #if options.max:
+        #fnameVals = [x for x in fnameVals if x <=options.max]
+    realMax = int(max(realMax, max(fnameVals)))
+    vals.append(fnameVals)
+
+#bins = np.linspace(0, xMax, options.binCount)
+#bins.append(100.0)
+
+fnames = [basename(x).split(".")[0] for x in fnames]
+colors = ["red", "blue", "yellow"]
+for fnameVals, fname, col in zip(vals, fnames, colors):
+    hist, bins = np.histogram(fnameVals, bins=options.binCount, range=(0, realMax), density=True)
+    hist =  hist / hist.sum()
+    widths = np.diff(bins)
+    #print bins, hist, widths
+    print fname, bins
+    print widths
+    if options.max:
+        pyplot.xlim(0,options.max)
+    if options.maxY:
+        pyplot.ylim(0,options.maxY)
+    pyplot.bar(bins[:-1], hist, widths, alpha=0.5, color=col, label=fname)
+
+    #pyplot.hist(fnameVals, bins, alpha=0.5, label=fnames, normed=True)
+#pyplot.hist(vals, bins, alpha=0.5, label=fnames, normed=True)
+#pyplot.hist(vals1, bins, alpha=0.5, label=fname1, normed=True)
+#pyplot.hist(vals2, bins, alpha=0.5, label=fname2, normed=True)
+pyplot.legend(loc='upper right')
+#pyplot.show()
+pyplot.savefig(options.out, width=15, height=10)

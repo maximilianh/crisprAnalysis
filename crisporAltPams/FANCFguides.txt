@@ -1,0 +1,2 @@
+guideId	guideSeq	specScore	effScore	offtargetCount	guideGenomeMatchGeneLocus
+s20+	GGAATCCCTTCTGCAGCACCTGG	33	0	308	

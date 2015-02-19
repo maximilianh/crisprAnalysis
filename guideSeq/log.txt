@@ -1,0 +1,7 @@
+# extend all off-targets add 40 bases on each side
+rm -rf extBed/*
+for i in *.bed; do cat $i | gawk '{OFS="\t"; $2-=40; $3+=37; print}' > extBed/$i; done
+
+# get the sequences for these
+rm -rf flankSeq/*
+for i in *.bed; do echo $i; twoBitToFa /data/gbdb/hg19/hg19.2bit -bed=extBed/$i flankSeq/`basename $i .bed`.fa; done
